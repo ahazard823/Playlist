@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddActivity">
+
+    <TextView
+        android:id="@+id/editing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Now Editing:"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/playlists" />
+
+    <TextView
+        android:id="@+id/playlists"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editing"
+        app:layout_constraintBottom_toTopOf="@id/artists" />
+
+    <EditText
+        android:id="@+id/artists"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Artist 1, Artist 2, Artist 3, Artist 4, ..."
+        android:inputType="textNoSuggestions"
+        app:layout_constraintBottom_toTopOf="@id/add_artist"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/playlists" />
+
+    <Button
+        android:id="@+id/add_artist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="addArtists"
+        android:text="Add Artists"
+        app:layout_constraintBottom_toTopOf="@id/albums"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/artists" />
+
+    <EditText
+        android:id="@+id/albums"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Album 1, Album 2 (Artist), Album 3, ..."
+        android:inputType="textNoSuggestions"
+        app:layout_constraintBottom_toTopOf="@id/add_albums"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/add_artist" />
+
+    <Button
+        android:id="@+id/add_albums"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="addAlbums"
+        android:text="Add Albums"
+        app:layout_constraintBottom_toTopOf="@id/songs"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/albums" />
+
+    <EditText
+        android:id="@+id/songs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Song 1, Song 2 (Artist), Song 3 (Artist; Album), ..."
+        android:inputType="textNoSuggestions"
+        app:layout_constraintBottom_toTopOf="@id/add_songs"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/add_albums" />
+
+    <Button
+        android:id="@+id/add_songs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="addSongs"
+        android:text="Add Songs"
+        app:layout_constraintBottom_toTopOf="@id/change"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/songs" />
+
+    <Button
+        android:id="@+id/change"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="changePlaylists"
+        android:text="Change Playlists"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/add_songs" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
