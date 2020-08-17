@@ -39,7 +39,7 @@ public class Playlist {
     @NonNull
     @Override
     public String toString() {
-        return name + ":\t" + String.valueOf(size) + " songs";
+        return name + ": " + String.valueOf(size) + " songs";
     }
 
     public boolean contains(String name) {

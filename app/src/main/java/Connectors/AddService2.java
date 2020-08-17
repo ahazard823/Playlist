@@ -53,21 +53,11 @@ public class AddService2 {
             String q = SEARCH_ENDPOINT + "?q=artist:" + artist.replace(" ", "%20") + "&type=artist";
             toSearch.add(q);
         }
-        /*for (int i = 0; i < toSearch.size(); i++) {
-            Log.v("i", String.valueOf(i));
-            searchArtist(toSearch.get(i), () -> {
-                String add_id = getCurrentArtistId();
-                Log.v("inside", "inside");
-                artists.add(add_id);
-            });
-        }*/
         searchArtists(toSearch, () -> {
             artists = getArtists();
             logArtists();
             startNext(artists, 0);
         });
-        //Log.v("Test alert", String.valueOf(artists.size()));
-        //logArtists();
     }
 
     private String getCurrenttId() {
@@ -107,7 +97,6 @@ public class AddService2 {
     private void searchArtists(ArrayList<String> tosearch, VolleyCallBack callBack) {
         Log.v("starting", "starting");
         String search;
-        //ArrayList<String> ret = new ArrayList<>();
         for (int i = 0; i < tosearch.size(); i++) {
             search = tosearch.get(i);
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -119,8 +108,6 @@ public class AddService2 {
                             currentId = jsonObject.getString("id");
                             artists.add(currentId);
                             Log.v("id", currentId);
-                            //artists.add(currentArtistId);
-                            //callBack.onSuccess();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
