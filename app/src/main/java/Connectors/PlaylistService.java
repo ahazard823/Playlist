@@ -19,9 +19,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import app.playlist.Playlist;
+import app.playlist.PlaylistActivity;
 
 public class PlaylistService {
-    private static final String ENDPOINT = "https://api.spotify.com/v1/me/playlists?limit=50";
+    private static final String ENDPOINT = "https://api.spotify.com/v1/me/playlists?limit=50&offset=";
     private SharedPreferences msharedPreferences;
     private RequestQueue mqueue;
     private ArrayList<Playlist> playlists = new ArrayList<>();
@@ -35,14 +36,17 @@ public class PlaylistService {
         return playlists;
     }
 
-    public ArrayList<Playlist> get(final VolleyCallBack callBack) {
+    public ArrayList<Playlist> get(int offset, final VolleyCallBack callBack) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, ENDPOINT, null, response -> {
+                (Request.Method.GET, ENDPOINT + offset, null, response -> {
                     Gson gson = new Gson();
                     JSONArray jsonArray = response.optJSONArray("items");
                     int total = response.optInt("total");
                     Log.v("total", String.valueOf(total));
                     Log.v("total", String.valueOf(jsonArray.length()));
+                    if (PlaylistActivity.getNumPlaylists() == 0) {
+                        PlaylistActivity.setNumPlaylists(total);
+                    }
                     for (int n = 0; n < jsonArray.length(); n++) {
                         try {
                             //Log.v("n", String.valueOf(n));
@@ -70,6 +74,10 @@ public class PlaylistService {
                                 //Log.v("User Test 2", user);
                                 Playlist playlist = new Playlist(collab, id, name, isPublic, size);
                                 playlists.add(playlist);
+                                //Log.v("Editable",name);
+                            } else {
+                                PlaylistActivity.setNumPlaylists(PlaylistActivity.getNumPlaylists()-1);
+                                //Log.v("Uneditable",name);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

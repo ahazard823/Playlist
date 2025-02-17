@@ -86,7 +86,7 @@ public class AddActivity extends AppCompatActivity {
         if (playlists != null) {
             playlists.clear();
         }
-        playlistService.get(() -> {
+        playlistService.get(0, () -> {
             playlists = playlistService.getPlaylists();
             //playlists = playlist;
             updatePlaylists();

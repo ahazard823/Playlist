@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
@@ -49,6 +50,8 @@ public class PlaylistActivity extends AppCompatActivity {
     PlaylistService playlistService;
     Playlist playlist;
     ListView list;
+    private static int numPlaylists = 0;
+    //PlaylistAdapter adapter;// = new PlaylistAdapter(this, playlists);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,14 +65,14 @@ public class PlaylistActivity extends AppCompatActivity {
         queue = Volley.newRequestQueue(this);
 
         playlistService = new PlaylistService(queue, sharedPreferences);
-
+        //adapter = new PlaylistAdapter(this, playlists);
         Log.v("test", sharedPreferences.getString("userid", "username"));
         //waitForPlaylists();
         user = sharedPreferences.getString("userid", "username") + "'s Playlists";
         //pass = sharedPreferences.getString("playlist", "playlist");
         log_user.setText(user);
         //log_pass.setText(pass);
-        waitForPlaylists();
+        waitForPlaylists(0);
 
     }
 
@@ -81,15 +84,20 @@ public class PlaylistActivity extends AppCompatActivity {
         finish();
     }
 
-    private void waitForPlaylists() {
-        if (playlists != null) {
+    public static void setNumPlaylists(int n) {
+        numPlaylists = n;
+    }
+    public static int getNumPlaylists() {return numPlaylists;}
+
+    private void waitForPlaylists(int offset) {
+        /*if (playlists != null) {
             playlists.clear();
             play_names.clear();
-        }
-        playlistService.get(() -> {
+        }*/
+        playlistService.get(offset, () -> {
             playlists = playlistService.getPlaylists();
             //playlists = playlist;
-            updatePlaylists();
+            updatePlaylists(offset);
             //Log.v("First name", playlists.get(7).getName());
 
         });
@@ -97,21 +105,28 @@ public class PlaylistActivity extends AppCompatActivity {
 
     }
 
-    private void updatePlaylists () {
+    private void updatePlaylists (int offset) {
         if (playlists.size() > 0) {
+            if (playlists.size() != numPlaylists && (numPlaylists - playlists.size() < 50)) {
+                Log.v("done", "offset" + offset);
+                waitForPlaylists(offset + 50);
+            }
             //log_pass.setText(playlists.get(7).getName());
-            ArrayAdapter adapter = new ArrayAdapter(this, R.layout.list, playlists);
-            list.setAdapter(adapter);
-            //playlist = playlists.get(7);
-            for (int n=0; n < playlists.size(); n++) {
-                Playlist current = playlists.get(n);
-                play_names.add(n, current.getName());
-                editor = getSharedPreferences("SPOTIFY", 0).edit();
-                editor.putString(current.getName(), current.getId());
-                editor.commit();
+            else {
+                //ArrayAdapter adapter = new ArrayAdapter(this, R.layout.list, playlists);
+                PlaylistAdapter adapter = new PlaylistAdapter(this, playlists);
+                list.setAdapter(adapter);
+                //playlist = playlists.get(7);
+                for (int n = 0; n < playlists.size(); n++) {
+                    Playlist current = playlists.get(n);
+                    play_names.add(n, current.getName());
+                    //Log.v("All playlists",current.getName());
+                    editor = getSharedPreferences("SPOTIFY", 0).edit();
+                    editor.putString(current.getName(), current.getId());
+                    editor.commit();
+                }
             }
         }
-
     }
 
     public void next(View view) {
@@ -123,6 +138,24 @@ public class PlaylistActivity extends AppCompatActivity {
         chosen.setText("");
         String[] edited = unedited.split(",  |, |,");
         ArrayList<String> toedit = new ArrayList<>(Arrays.asList(edited));
+        PlaylistAdapter adapter = (PlaylistAdapter) list.getAdapter();
+        ArrayList<String> checked = adapter.getSelectedPlaylists();
+        for (int i = 0; i < toedit.size(); i++) {
+            Log.v("testing", "iteration " + i);
+            if (toedit.get(i).equals("")) {
+                Log.v("testing", "no text entered " + i);
+                toedit.remove(i);
+            }
+        }
+        toedit.addAll(checked);
+        //for (int i = 0; i < checked.size(); i++){
+        //    toedit.add(checked.get(i));
+        //}
+        if (toedit.size() == 0) {
+            Toast toast = Toast.makeText(this, "Please Enter or Select a Playlist", Toast.LENGTH_LONG);
+            toast.show();
+            return;
+        }
         for (int i = 0; i < toedit.size(); i++) {
             Log.v("pre", toedit.get(i));
             Log.v("test contains", String.valueOf(play_names.contains(toedit.get(i))));
